@@ -49,24 +49,23 @@ public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
         [HttpPost]
         public async Task<ActionResult<BookingList>> PostBooking(BookingList booking)
         {
-            // Check if the facility is available
-            var isAvailable = await IsFacilityAvailableAsync(
-                booking.FacilityId,
+            // Check if the sport is available
+            var isAvailable = await IssportAvailableAsync(
+                booking.SportId,
                 booking.DateFrom,
                 booking.DateTo);
 
             if (!isAvailable)
             {
-                return BadRequest(new { status = "failed", msg = "Facility is not available on the selected dates." });
+                return BadRequest(new { status = "failed", msg = "sport is not available on the selected dates." });
             }
 
             // Check if a booking with the same DateCreated, DateFrom, and DateTo already exists
             var exists = await _context.Bookings
-                .AnyAsync(b => b.FacilityId == booking.FacilityId &&
+                .AnyAsync(b => b.SportId == booking.SportId &&
                                b.DateCreated.Date == booking.DateCreated.Date &&
                                b.DateFrom == booking.DateFrom &&
-                               b.DateTo == booking.DateTo &&
-                               b.Status == 1); // Assuming 1 is the status for confirmed bookings
+                               b.DateTo == booking.DateTo ); // Assuming 1 is the status for confirmed bookings
 
             if (exists)
             {
@@ -128,14 +127,13 @@ public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
             return _context.Bookings.Any(e => e.Id == id);
         }
 
-        private async Task<bool> IsFacilityAvailableAsync(int facilityId, TimeSpan dateFrom, TimeSpan dateTo)
+        private async Task<bool> IssportAvailableAsync(int sportId, TimeSpan dateFrom, TimeSpan dateTo)
         {
             var now = DateTime.Now;
             var bookings = await _context.Bookings
-                .Where(b => b.FacilityId == facilityId &&
+                .Where(b => b.SportId == sportId &&
                             ((b.DateFrom < dateTo && b.DateTo > dateFrom) ||
-                             (b.DateFrom < dateFrom && b.DateTo > dateTo)) &&
-                            b.Status == 1) // Assuming 1 is the status for confirmed bookings
+                             (b.DateFrom < dateFrom && b.DateTo > dateTo)) ) // Assuming 1 is the status for confirmed bookings
                 .ToListAsync();
 
             return !bookings.Any();

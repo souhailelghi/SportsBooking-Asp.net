@@ -12,8 +12,8 @@ using SportsBookingSystem.Data;
 namespace SportsBookingSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240915224946_timRangDb")]
-    partial class timRangDb
+    [Migration("20240921162844_initialDb")]
+    partial class initialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,18 +48,8 @@ namespace SportsBookingSystem.Migrations
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FacilityId")
+                    b.Property<int>("SportId")
                         .HasColumnType("int");
-
-                    b.Property<string>("RefCode")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<byte>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0);
 
                     b.HasKey("Id");
 
@@ -92,9 +82,7 @@ namespace SportsBookingSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
@@ -153,9 +141,7 @@ namespace SportsBookingSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
@@ -177,7 +163,7 @@ namespace SportsBookingSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacilityId")
+                    b.Property<int>("SportId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -185,7 +171,7 @@ namespace SportsBookingSystem.Migrations
                     b.ToTable("DateHours");
                 });
 
-            modelBuilder.Entity("SportsBookingSystem.Modles.FacilityList", b =>
+            modelBuilder.Entity("SportsBookingSystem.Modles.SportList", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,23 +182,22 @@ namespace SportsBookingSystem.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Condition")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("DeleteFlag")
-                        .HasColumnType("tinyint");
+                    b.Property<string>("DelyTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FacilityCode")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
@@ -221,17 +206,20 @@ namespace SportsBookingSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumberPlayer")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
+                    b.Property<string>("sportCode")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Facilities");
+                    b.ToTable("Sports");
                 });
 
             modelBuilder.Entity("SportsBookingSystem.Modles.SystemInfo", b =>

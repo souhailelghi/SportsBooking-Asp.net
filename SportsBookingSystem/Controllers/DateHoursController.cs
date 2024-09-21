@@ -17,6 +17,41 @@ namespace SportsBookingSystem.Controllers
         {
             _context = context;
         }
+        // GET: api/DateHours/GetAllDateHoursBySportId/{sportId}
+        [HttpGet("GetAllDateHoursBySportId/{sportId}")]
+        public async Task<ActionResult<IEnumerable<DateHours>>> GetAllDateHoursBySportId(int sportId)
+        {
+            var dateHoursList = await _context.DateHours
+                .Include(d => d.TimeRanges)
+                .Where(d => d.SportId == sportId) // Filtering by SportId
+                .ToListAsync();
+
+            if (dateHoursList == null || !dateHoursList.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(dateHoursList);
+        }
+
+
+        // GET: api/DateHours/GetAllDateHoursById/{id}
+        [HttpGet("GetAllDateHoursById/{id}")]
+        public async Task<ActionResult<IEnumerable<DateHours>>> GetAllDateHoursById(int id)
+        {
+            var dateHoursList = await _context.DateHours
+                .Include(d => d.TimeRanges)
+                .Where(d => d.SportId == id) // Assuming SportId or any other related ID field
+                .ToListAsync();
+
+            if (dateHoursList == null || !dateHoursList.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(dateHoursList);
+        }
+
 
         // GET: api/DateHours
         [HttpGet]
@@ -56,35 +91,7 @@ namespace SportsBookingSystem.Controllers
             return CreatedAtAction(nameof(PostDateHours), new { id = dateHours.Id }, dateHours);
         }
 
-        // PUT: api/DateHours/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutDateHours(int id, DateHours dateHours)
-        //{
-        //    if (id != dateHours.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(dateHours).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!DateHoursExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
+      
 
         // DELETE: api/DateHours/5
         [HttpPut("{id}")]
@@ -109,7 +116,7 @@ namespace SportsBookingSystem.Controllers
                 return NotFound();
             }
 
-            existingDateHours.FacilityId = dateHours.FacilityId;
+            existingDateHours.SportId = dateHours.SportId;
             existingDateHours.Day = dateHours.Day;
             existingDateHours.DateCreation = dateHours.DateCreation;
 
@@ -148,66 +155,24 @@ namespace SportsBookingSystem.Controllers
             return _context.DateHours.Any(e => e.Id == id);
         }
 
-        //private readonly IDateHoursRepository _repository;
+        // GET: api/DateHours/day/Monday
+        [HttpGet("day/{day}")]
+        public async Task<ActionResult<IEnumerable<DateHours>>> GetDateHoursByDay(string day)
+        {
+            var dateHoursList = await _context.DateHours
+                .Include(d => d.TimeRanges)
+                .Where(d => d.Day.ToLower() == day.ToLower()) // Case-insensitive comparison
+                .ToListAsync();
 
-        //public DateHoursController(IDateHoursRepository repository)
-        //{
-        //    _repository = repository;
-        //}
+            if (!dateHoursList.Any())
+            {
+                return NotFound();
+            }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<DateHours>>> GetAll()
-        //{
-        //    var dateHours = await _repository.GetAllAsync();
-        //    return Ok(dateHours);
-        //}
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<DateHours>> GetById(int id)
-        //{
-        //    var dateHours = await _repository.GetByIdAsync(id);
-        //    if (dateHours == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(dateHours);
-        //}
-
-        //[HttpPost]
-        //public async Task<ActionResult<DateHours>> Create(DateHours dateHours)
-        //{
-        //    if (dateHours == null)
-        //    {
-        //        return BadRequest("DateHours object is null.");
-        //    }
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    await _repository.AddAsync(dateHours);
-        //    return CreatedAtAction(nameof(GetById), new { id = dateHours.Id }, dateHours);
-        //}
+            return dateHoursList;
+        }
 
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(int id, DateHours dateHours)
-        //{
-        //    if (id != dateHours.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    await _repository.UpdateAsync(dateHours);
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    await _repository.DeleteAsync(id);
-        //    return NoContent();
-        //}
+      
     }
 }

@@ -8,56 +8,56 @@ namespace SportsBookingSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FacilityListController : ControllerBase
+    public class SportListController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public FacilityListController(AppDbContext context)
+        public SportListController(AppDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FacilityList>>> GetFacilities()
+        public async Task<ActionResult<IEnumerable<SportList>>> GetSports()
         {
-            return await _context.Facilities.ToListAsync();
+            return await _context.Sports.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FacilityList>> GetFacility(int id)
+        public async Task<ActionResult<SportList>> Getsport(int id)
         {
-            var facility = await _context.Facilities.FindAsync(id);
-            if (facility == null)
+            var sport = await _context.Sports.FindAsync(id);
+            if (sport == null)
             {
                 return NotFound();
             }
-            return facility;
+            return sport;
         }
 
         [HttpPost]
-        public async Task<ActionResult<FacilityList>> PostFacility(FacilityList facility)
+        public async Task<ActionResult<SportList>> Postsport(SportList sport)
         {
-            _context.Facilities.Add(facility);
+            _context.Sports.Add(sport);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFacility), new { id = facility.Id }, facility);
+            return CreatedAtAction(nameof(Getsport), new { id = sport.Id }, sport);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFacility(int id, FacilityList facility)
+        public async Task<IActionResult> Putsport(int id, SportList sport)
         {
-            if (id != facility.Id)
+            if (id != sport.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(facility).State = EntityState.Modified;
+            _context.Entry(sport).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FacilityExists(id))
+                if (!sportExists(id))
                 {
                     return NotFound();
                 }
@@ -67,22 +67,22 @@ namespace SportsBookingSystem.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFacility(int id)
+        public async Task<IActionResult> Deletesport(int id)
         {
-            var facility = await _context.Facilities.FindAsync(id);
-            if (facility == null)
+            var sport = await _context.Sports.FindAsync(id);
+            if (sport == null)
             {
                 return NotFound();
             }
 
-            _context.Facilities.Remove(facility);
+            _context.Sports.Remove(sport);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
-        private bool FacilityExists(int id)
+        private bool sportExists(int id)
         {
-            return _context.Facilities.Any(e => e.Id == id);
+            return _context.Sports.Any(e => e.Id == id);
         }
     }
 }

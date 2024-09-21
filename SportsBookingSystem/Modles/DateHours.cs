@@ -9,7 +9,7 @@ namespace SportsBookingSystem.Modles
         public int Id { get; set; }
 
         [Required]
-        public int FacilityId { get; set; }
+        public int SportId { get; set; }
         public string Day { get; set; }
 
         

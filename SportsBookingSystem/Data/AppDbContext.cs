@@ -13,7 +13,7 @@
 //        public DbSet<BookingList> Bookings { get; set; }
 //        public DbSet<CategoryList> Categories { get; set; }
 //        public DbSet<ClientList> Clients { get; set; }
-//        public DbSet<FacilityList> Facilities { get; set; }
+//        public DbSet<sportList> Sports { get; set; }
 //        public DbSet<SystemInfo> SystemInfos { get; set; }
 //        public DbSet<DateHours> DateHours { get; set; }
 //        public DbSet<TimeRange> TimeRanges { get; set; }
@@ -41,7 +41,7 @@
 //                .Property(c => c.Status)
 //                .HasDefaultValue(1);
 
-//            modelBuilder.Entity<FacilityList>()
+//            modelBuilder.Entity<sportList>()
 //                .Property(f => f.Status)
 //                .HasDefaultValue(1);
 //        }
@@ -69,7 +69,7 @@ namespace SportsBookingSystem.Data
         public DbSet<BookingList> Bookings { get; set; }
         public DbSet<CategoryList> Categories { get; set; }
         public DbSet<ClientList> Clients { get; set; }
-        public DbSet<FacilityList> Facilities { get; set; }
+        public DbSet<SportList> Sports { get; set; }
         public DbSet<SystemInfo> SystemInfos { get; set; }
         public DbSet<DateHours> DateHours { get; set; }
         public DbSet<TimeRange> TimeRanges { get; set; } // Add this if TimeRange is a standalone entity
@@ -86,21 +86,21 @@ namespace SportsBookingSystem.Data
             //    .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior as needed
 
             // Example: Configure the default values and constraints
-            modelBuilder.Entity<BookingList>()
-                .Property(b => b.Status)
-                .HasDefaultValue(0);
+            //modelBuilder.Entity<BookingList>()
+            //    .Property(b => b.Status)
+            //    .HasDefaultValue(0);
 
-            modelBuilder.Entity<CategoryList>()
-                .Property(c => c.Status)
-                .HasDefaultValue(1);
+            //modelBuilder.Entity<CategoryList>()
+            //    .Property(c => c.Status)
+            //    .HasDefaultValue(1);
 
-            modelBuilder.Entity<ClientList>()
-                .Property(c => c.Status)
-                .HasDefaultValue(1);
+            //modelBuilder.Entity<ClientList>()
+            //    .Property(c => c.Status)
+            //    .HasDefaultValue(1);
 
-            modelBuilder.Entity<FacilityList>()
-                .Property(f => f.Status)
-                .HasDefaultValue(1);
+            //modelBuilder.Entity<sportList>()
+            //    .Property(f => f.Status)
+            //    .HasDefaultValue(1);
         }
     }
 }
