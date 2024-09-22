@@ -12,8 +12,8 @@ using SportsBookingSystem.Data;
 namespace SportsBookingSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921162844_initialDb")]
-    partial class initialDb
+    [Migration("20240921204354_inituser")]
+    partial class inituser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace SportsBookingSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("BookingTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -50,6 +50,9 @@ namespace SportsBookingSystem.Migrations
 
                     b.Property<int>("SportId")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -191,9 +194,8 @@ namespace SportsBookingSystem.Migrations
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DelyTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DelayTime")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -209,13 +211,9 @@ namespace SportsBookingSystem.Migrations
                     b.Property<int>("NumberPlayer")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("sportCode")
-                        .IsRequired()
+                    b.Property<int>("sportCode")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -265,6 +263,29 @@ namespace SportsBookingSystem.Migrations
                     b.HasIndex("DateHoursId");
 
                     b.ToTable("TimeRanges");
+                });
+
+            modelBuilder.Entity("SportsBookingSystem.Modles.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SportsBookingSystem.Modles.TimeRange", b =>

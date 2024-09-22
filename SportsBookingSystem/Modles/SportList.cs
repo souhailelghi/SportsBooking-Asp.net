@@ -8,8 +8,8 @@ namespace SportsBookingSystem.Modles
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string sportCode { get; set; }
+  
+        public int sportCode { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
@@ -17,7 +17,8 @@ namespace SportsBookingSystem.Modles
         public string? ImagePath { get; set; }
 
         public int NumberPlayer { get; set; }
-        public string DelyTime { get; set; }
+        
+        public int DelayTime { get; set; }
         public string? Condition { get; set; }
        
 
@@ -33,8 +34,6 @@ namespace SportsBookingSystem.Modles
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public decimal Price { get; set; }
 
        
     }

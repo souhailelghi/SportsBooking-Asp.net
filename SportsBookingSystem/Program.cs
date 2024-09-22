@@ -3,6 +3,9 @@ using SportsBookingSystem.Data;
 using SportsBookingSystem.Converters;
 using SportsBookingSystem.IRepositorys;
 using SportsBookingSystem.Repositorys;
+using SportsBookingSystem.Services;
+using SportsManagementApp.Interfaces;
+using SportsManagementApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,8 @@ builder.Services.AddControllers()
 
 
 builder.Services.AddScoped<IDateHoursRepository, DateHoursRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<BookingService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

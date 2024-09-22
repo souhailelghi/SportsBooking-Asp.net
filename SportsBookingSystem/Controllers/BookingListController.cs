@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportsBookingSystem.Data;
+
 using SportsBookingSystem.Modles;
+using SportsBookingSystem.Services;
 
 namespace SportsBookingSystem.Controllers
 {
@@ -9,33 +12,72 @@ namespace SportsBookingSystem.Controllers
     [ApiController]
     public class BookingListController : ControllerBase
     {
+        private readonly BookingService _bookingService;
         private readonly AppDbContext _context;
 
-        public BookingListController(AppDbContext context)
+        public BookingListController(BookingService bookingService, AppDbContext context)
         {
+            _bookingService = bookingService;
             _context = context;
         }
 
-        [HttpGet]
+        [HttpPost("AddBookings")]
+        public async Task<ActionResult<BookingList>> PostBookings(BookingList booking)
+        {
+            if (booking.UserIdList == null || booking.UserIdList.Count == 0)
+            {
+                return BadRequest(new { error = "UserIdList cannot be empty." });
+            }
+
+            if (booking.SportId <= 0)
+            {
+                return BadRequest(new { error = "Invalid sport ID." });
+            }
+
+            if (await _bookingService.BookAsync(booking.UserId, booking.BookingTime, booking.DateFrom, booking.DateTo, new List<Guid> { booking.UserId }, booking.SportId))
+            {
+                return Ok(new { message = "Booking successful!" });
+            }
+
+            return BadRequest(new { error = "You or your team can't make another booking until the required time has passed since the last booking." });
+        }
+
+
+        [HttpGet("newGet{id}")]
+        public async Task<ActionResult<BookingList>> GetNewBooking(int id)
+        {
+            var booking = await _bookingService.GetBookingByIdAsync(id);
+            if (booking == null)
+            {
+                return NotFound();
+            }
+            return booking;
+        }
+
+        // Get all bookings
+        [HttpGet("GetAllBookings")]
         public async Task<ActionResult<IEnumerable<BookingList>>> GetBookings()
         {
             return await _context.Bookings.ToListAsync();
         }
-        [HttpGet("dates")]
-public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
-{
-    var bookingDates = await _context.Bookings
-        .Select(b => new
+
+        // Get booking dates (start and end)
+        [HttpGet("GetBookingDates")]
+        public async Task<ActionResult<IEnumerable<object>>> GetBookingDates()
         {
-            b.DateFrom,
-            b.DateTo
-        })
-        .ToListAsync();
+            var bookingDates = await _context.Bookings
+                .Select(b => new
+                {
+                    b.DateFrom,
+                    b.DateTo
+                })
+                .ToListAsync();
 
-    return Ok(bookingDates);
-}
+            return Ok(bookingDates);
+        }
 
-        [HttpGet("{id}")]
+        // Get a specific booking by ID
+        [HttpGet("GetBookingBy{id}")]
         public async Task<ActionResult<BookingList>> GetBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
@@ -46,38 +88,10 @@ public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
             return booking;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BookingList>> PostBooking(BookingList booking)
-        {
-            // Check if the sport is available
-            var isAvailable = await IssportAvailableAsync(
-                booking.SportId,
-                booking.DateFrom,
-                booking.DateTo);
+     
 
-            if (!isAvailable)
-            {
-                return BadRequest(new { status = "failed", msg = "sport is not available on the selected dates." });
-            }
-
-            // Check if a booking with the same DateCreated, DateFrom, and DateTo already exists
-            var exists = await _context.Bookings
-                .AnyAsync(b => b.SportId == booking.SportId &&
-                               b.DateCreated.Date == booking.DateCreated.Date &&
-                               b.DateFrom == booking.DateFrom &&
-                               b.DateTo == booking.DateTo ); // Assuming 1 is the status for confirmed bookings
-
-            if (exists)
-            {
-                return BadRequest(new { status = "failed", msg = "A booking with the same details already exists." });
-            }
-
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
-        }
-
-        [HttpPut("{id}")]
+        // Update an existing booking
+        [HttpPut("UpdateBooking{id}")]
         public async Task<IActionResult> PutBooking(int id, BookingList booking)
         {
             if (id != booking.Id)
@@ -92,16 +106,13 @@ public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookingExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
+                return NotFound();
             }
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        // Delete a booking by ID
+        [HttpDelete("DeleteBooking{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
@@ -114,29 +125,14 @@ public async Task<ActionResult<IEnumerable<BookingList>>> GetBookingDates()
             await _context.SaveChangesAsync();
             return NoContent();
         }
-        [HttpDelete("all")]
+
+        // Delete all bookings
+        [HttpDelete("DeleteAllBookings")]
         public async Task<IActionResult> DeleteAllBookings()
         {
             _context.Bookings.RemoveRange(_context.Bookings);
             await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-        private bool BookingExists(int id)
-        {
-            return _context.Bookings.Any(e => e.Id == id);
-        }
-
-        private async Task<bool> IssportAvailableAsync(int sportId, TimeSpan dateFrom, TimeSpan dateTo)
-        {
-            var now = DateTime.Now;
-            var bookings = await _context.Bookings
-                .Where(b => b.SportId == sportId &&
-                            ((b.DateFrom < dateTo && b.DateTo > dateFrom) ||
-                             (b.DateFrom < dateFrom && b.DateTo > dateTo)) ) // Assuming 1 is the status for confirmed bookings
-                .ToListAsync();
-
-            return !bookings.Any();
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportsBookingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initialDb : Migration
+    public partial class inituser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,9 @@ namespace SportsBookingSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SportId = table.Column<int>(type: "int", nullable: false),
+                    BookingTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateFrom = table.Column<TimeSpan>(type: "time", nullable: false),
                     DateTo = table.Column<TimeSpan>(type: "time", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -93,17 +94,16 @@ namespace SportsBookingSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    sportCode = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    sportCode = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NumberPlayer = table.Column<int>(type: "int", nullable: false),
-                    DelyTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DelayTime = table.Column<int>(type: "int", nullable: false),
                     Condition = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,6 +122,20 @@ namespace SportsBookingSystem.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SystemInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +185,9 @@ namespace SportsBookingSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "TimeRanges");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "DateHours");

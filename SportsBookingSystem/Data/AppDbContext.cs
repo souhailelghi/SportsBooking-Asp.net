@@ -73,7 +73,7 @@ namespace SportsBookingSystem.Data
         public DbSet<SystemInfo> SystemInfos { get; set; }
         public DbSet<DateHours> DateHours { get; set; }
         public DbSet<TimeRange> TimeRanges { get; set; } // Add this if TimeRange is a standalone entity
-
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
