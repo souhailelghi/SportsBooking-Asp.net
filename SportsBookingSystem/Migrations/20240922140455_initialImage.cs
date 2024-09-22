@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportsBookingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class inituser : Migration
+    public partial class initialImage : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,8 @@ namespace SportsBookingSystem.Migrations
                     DateFrom = table.Column<TimeSpan>(type: "time", nullable: false),
                     DateTo = table.Column<TimeSpan>(type: "time", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserIdList = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,9 +95,9 @@ namespace SportsBookingSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    sportCode = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    sportCode = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     NumberPlayer = table.Column<int>(type: "int", nullable: false),
                     DelayTime = table.Column<int>(type: "int", nullable: false),
                     Condition = table.Column<string>(type: "nvarchar(max)", nullable: true),

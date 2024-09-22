@@ -12,8 +12,8 @@ using SportsBookingSystem.Data;
 namespace SportsBookingSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921210159_initmaxlengh")]
-    partial class initmaxlengh
+    [Migration("20240922141648_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

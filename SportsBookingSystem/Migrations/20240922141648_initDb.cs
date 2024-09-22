@@ -5,25 +5,34 @@
 namespace SportsBookingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class inintdbs : Migration
+    public partial class initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Image",
+                table: "Sports");
+
             migrationBuilder.AddColumn<string>(
-                name: "UserIdList",
-                table: "Bookings",
+                name: "ImagePath",
+                table: "Sports",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "[]");
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "UserIdList",
-                table: "Bookings");
+                name: "ImagePath",
+                table: "Sports");
+
+            migrationBuilder.AddColumn<byte[]>(
+                name: "Image",
+                table: "Sports",
+                type: "varbinary(max)",
+                nullable: true);
         }
     }
 }

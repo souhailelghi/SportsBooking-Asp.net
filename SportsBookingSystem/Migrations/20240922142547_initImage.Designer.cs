@@ -12,8 +12,8 @@ using SportsBookingSystem.Data;
 namespace SportsBookingSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921204354_inituser")]
-    partial class inituser
+    [Migration("20240922142547_initImage")]
+    partial class initImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,10 @@ namespace SportsBookingSystem.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdList")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -174,6 +178,27 @@ namespace SportsBookingSystem.Migrations
                     b.ToTable("DateHours");
                 });
 
+            modelBuilder.Entity("SportsBookingSystem.Modles.Personne", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Personnes");
+                });
+
             modelBuilder.Entity("SportsBookingSystem.Modles.SportList", b =>
                 {
                     b.Property<int>("Id")
@@ -212,7 +237,6 @@ namespace SportsBookingSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("sportCode")
-                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.HasKey("Id");

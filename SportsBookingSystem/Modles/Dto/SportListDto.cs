@@ -1,26 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SportsBookingSystem.Modles
+namespace SportsBookingSystem.Modles.Dto
 {
-    public class SportList
+    public class SportListDto
     {
-        [Key]
-        public int Id { get; set; }
 
         [Required]
-  
+
         public int sportCode { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
 
-        public byte[] Image { get; set; }
+        public IFormFile Image { get; set; }
 
         public int NumberPlayer { get; set; }
-        
+
         public int DelayTime { get; set; }
         public string? Condition { get; set; }
-       
+
 
 
         [Required]
@@ -33,8 +31,5 @@ namespace SportsBookingSystem.Modles
 
         [Required]
         public string Description { get; set; }
-
-
-       
     }
 }
